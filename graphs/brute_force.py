@@ -1,10 +1,29 @@
-from utils.generateClauses import generate_clauses
-from graphs.brute_force import is_satisfiable, convert_formula, interpret_solution, variable_map, inverse_variable_map
-from graphs.DPLL import parse_clauses, dpll
+import string
 import time
-import matplotlib.pyplot as plt
 
-def run_tests(num_vars_list, num_trials=10):
+from matplotlib import pyplot as plt
+from utils.generateClauses import generate_clauses
+from utils.brute_force import is_satisfiable, convert_formula, interpret_solution, variable_map, inverse_variable_map
+from utils.DPLL import parse_clauses, dpll
+
+variable_map = {letter: index + 1 for index, letter in enumerate(string.ascii_lowercase)}
+inverse_variable_map = {v: k for k, v in variable_map.items()}
+
+def convert_formula(formula_with_vars, variable_map):
+    cnf_formula = []
+    for clause in formula_with_vars:
+        numeric_clause = []
+        for literal in clause:
+            var = literal.strip('¬')
+            num = variable_map[var]
+            if literal.startswith('¬'):
+                numeric_clause.append(-num)
+            else:
+                numeric_clause.append(num)
+        cnf_formula.append(numeric_clause)
+    return cnf_formula
+
+def run_tests(num_vars_list, num_trials=100):
     results = []
     for num_vars in num_vars_list:
         num_clauses = num_vars * 3
@@ -26,7 +45,6 @@ def run_tests(num_vars_list, num_trials=10):
         results.append((num_vars, sum(times_dpll) / len(times_dpll), sum(times_brute) / len(times_brute)))
     return results
 
-
 def plot_results(results):
     vars_plotted, times_dpll_plotted, times_brute_plotted = zip(*results)
     plt.figure(figsize=(10, 5))
@@ -39,10 +57,6 @@ def plot_results(results):
     plt.grid(True)
     plt.show()
 
-def main():
-    num_vars_list = [0,2,4,6,8,10,12,14]
-    results = run_tests(num_vars_list)
-    plot_results(results)
-
-if __name__ == '__main__':
-    main()
+num_vars_list = [2, 4, 6, 8, 10]
+results = run_tests(num_vars_list)
+plot_results(results)

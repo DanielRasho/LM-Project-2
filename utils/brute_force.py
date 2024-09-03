@@ -38,7 +38,7 @@ def convert_formula(formula_with_vars, variable_map):
     return cnf_formula
 
 def is_satisfiable(cnf_formula):
-    """
+    """z
     Verifica si una fórmula en CNF es satisfacible usando fuerza bruta.
     
     Args:
