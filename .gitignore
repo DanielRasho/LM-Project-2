@@ -1,4 +1,4 @@
 # .gitignore
 
 # Ignore Python cache directories
-/utils/__pycache__/
+**/__pycache__/
